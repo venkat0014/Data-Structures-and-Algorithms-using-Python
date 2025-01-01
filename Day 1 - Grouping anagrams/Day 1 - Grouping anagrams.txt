@@ -1,0 +1,140 @@
+### Notes: Grouping Anagrams
+
+#### Problem Statement
+Given an array of strings, group all strings that are anagrams of each other. An anagram is a word formed by rearranging the letters of another word (e.g., "bat" and "tab").
+
+#### Steps to Solve the Problem
+
+1. **Understand Anagrams:**
+   - Words are anagrams if they have the same characters arranged in any order.
+   - Sorting the characters of a word creates a unique "signature" for its anagram group.
+
+2. **Approach:**
+   - Use a dictionary to group words based on their sorted characters.
+
+#### Step-by-Step Solution
+
+1. **Initialize a Dictionary:**
+   - Create an empty dictionary where keys represent sorted characters (signatures) and values are lists of words that match the signature.
+
+   ```python
+   anagram_groups = {}
+   ```
+
+2. **Process Each Word:**
+   - For each word in the input array:
+     1. Sort its characters alphabetically to get its signature.
+     2. Use the sorted string as the key in the dictionary.
+     3. If the key exists, append the word to the list. Otherwise, create a new key.
+
+   ```python
+   for word in arr:
+       sorted_word = ''.join(sorted(word))  # Sort the word
+       if sorted_word not in anagram_groups:
+           anagram_groups[sorted_word] = []  # Create a new list for this group
+       anagram_groups[sorted_word].append(word)  # Add the word to the group
+   ```
+
+3. **Sort Each Group:**
+   - After grouping all words, sort each group lexicographically (alphabetical order).
+
+   ```python
+   sorted_groups = [sorted(group) for group in anagram_groups.values()]
+   ```
+
+4. **Sort All Groups:**
+   - To ensure the output is consistent, sort the groups lexicographically by their first element (or the entire group).
+
+   ```python
+   sorted_groups.sort()
+   ```
+
+5. **Return the Result:**
+   - Return the sorted list of anagram groups.
+
+   ```python
+   return sorted_groups
+   ```
+
+#### Example Walkthrough
+
+**Input:**
+```python
+arr = ["bat", "tab", "rat", "tar", "art", "bats", "stab"]
+```
+
+1. **Grouping by Sorted Words:**
+   - "bat" and "tab" → Key: "abt"
+   - "rat", "tar", and "art" → Key: "art"
+   - "bats" and "stab" → Key: "abst"
+
+   **Intermediate Dictionary:**
+   ```python
+   {
+       "abt": ["bat", "tab"],
+       "art": ["rat", "tar", "art"],
+       "abst": ["bats", "stab"]
+   }
+   ```
+
+2. **Sort Each Group:**
+   ```python
+   [
+       ["bat", "tab"],
+       ["art", "rat", "tar"],
+       ["bats", "stab"]
+   ]
+   ```
+
+3. **Sort All Groups:**
+   ```python
+   [
+       ["art", "rat", "tar"],
+       ["bats", "stab"],
+       ["bat", "tab"]
+   ]
+   ```
+
+**Output:**
+```python
+[["art", "rat", "tar"], ["bats", "stab"], ["bat", "tab"]]
+```
+
+#### Python Code
+
+```python
+from collections import defaultdict
+
+def group_anagrams(arr):
+    # Step 1: Create a dictionary to store groups
+    anagram_groups = defaultdict(list)
+
+    # Step 2: Group words by their sorted characters
+    for word in arr:
+        sorted_word = ''.join(sorted(word))
+        anagram_groups[sorted_word].append(word)
+
+    # Step 3: Sort each group and all groups lexicographically
+    result = [sorted(group) for group in anagram_groups.values()]
+    result.sort()
+
+    return result
+
+# Example usage
+arr = ["bat", "tab", "rat", "tar", "art", "bats", "stab"]
+print(group_anagrams(arr))
+```
+
+#### Key Points
+1. **Sorting the Word:** Sorting is the key to grouping anagrams because it gives a unique signature for all anagrams.
+2. **Dictionary:** Use a dictionary to store the groups, where the key is the sorted signature.
+3. **Sorting the Groups:** Ensure each group and the overall result are sorted lexicographically for consistent output.
+
+#### Complexity Analysis
+- Sorting each word: \(O(M \log M)\), where \(M\) is the average length of a word.
+- Iterating through all words: \(O(N \cdot M \log M)\), where \(N\) is the number of words.
+- Sorting groups: \(O(K \cdot L \log L)\), where \(K\) is the number of groups and \(L\) is the size of the largest group.
+
+#### Final Thoughts
+This method is efficient and ensures correctness by leveraging sorting and dictionary-based grouping. It handles edge cases like empty strings or non-anagram inputs gracefully.
+
